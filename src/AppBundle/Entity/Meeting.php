@@ -41,12 +41,12 @@ class Meeting
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
-    private $name;
+    private $name = '';
 
     /**
      * @ORM\Column(name="description", type="text")
      */
-    private $description;
+    private $description = '';
 
     /**
      * Get id

@@ -37,12 +37,12 @@ class MeetingMinutes
      * @ORM\ManyToOne(targetEntity="Meeting", inversedBy="minutes")
      * @ORM\JoinColumn(name="meeting_id", referencedColumnName="id")
      **/
-    private $meeting;
+    private $meeting = '';
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
-    private $name;
+    private $name = '';
 
     /**
      * @ORM\Column(name="description", type="text")

@@ -8,7 +8,8 @@ class MeetingServiceTest extends WebTestCase
 {
     public function testCreate()
     {
-        $svc = $this->getContainer()->get('app.meeting');
+        $client = static::createClient();
+        $svc = $client->getContainer()->get('app.meeting');
 
         $m = $svc->create();
         $this->assertNotNull($m);
