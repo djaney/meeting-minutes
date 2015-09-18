@@ -8,8 +8,9 @@ class MeetingService {
         $this->doctrine = $doctrine;
     }
 
-    public function create(){
+    public function create($title = ''){
         $meeting = new Meeting();
+        $meeting->setTitle($title);
         $this->doctrine->getManager()->persist($meeting);
         $this->doctrine->getManager()->flush();
         return $meeting;

@@ -10,7 +10,7 @@ use Gedmo\Mapping\Annotation as Gedmo; // gedmo annotations
  * @ORM\Table()
  * @ORM\Entity
  */
-class Meeting
+class MeetingMinutes
 {
     /**
      * @var integer
@@ -34,9 +34,10 @@ class Meeting
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="MeetingMinutes", mappedBy="meeting")
+     * @ORM\ManyToOne(targetEntity="Meeting", inversedBy="minutes")
+     * @ORM\JoinColumn(name="meeting_id", referencedColumnName="id")
      **/
-    private $minutes;
+    private $meeting;
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
@@ -57,20 +58,13 @@ class Meeting
     {
         return $this->id;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->minutes = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
      *
-     * @return Meeting
+     * @return MeetingMinutes
      */
     public function setCreatedAt($createdAt)
     {
@@ -94,7 +88,7 @@ class Meeting
      *
      * @param \DateTime $updatedAt
      *
-     * @return Meeting
+     * @return MeetingMinutes
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -114,37 +108,27 @@ class Meeting
     }
 
     /**
-     * Add minute
+     * Set meeting
      *
-     * @param \AppBundle\Entity\MeetingMinutes $minute
+     * @param \AppBundle\Entity\Meeting $meeting
      *
-     * @return Meeting
+     * @return MeetingMinutes
      */
-    public function addMinute(\AppBundle\Entity\MeetingMinutes $minute)
+    public function setMeeting(\AppBundle\Entity\Meeting $meeting = null)
     {
-        $this->minutes[] = $minute;
+        $this->meeting = $meeting;
 
         return $this;
     }
 
     /**
-     * Remove minute
+     * Get meeting
      *
-     * @param \AppBundle\Entity\MeetingMinutes $minute
+     * @return \AppBundle\Entity\Meeting
      */
-    public function removeMinute(\AppBundle\Entity\MeetingMinutes $minute)
+    public function getMeeting()
     {
-        $this->minutes->removeElement($minute);
-    }
-
-    /**
-     * Get minutes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMinutes()
-    {
-        return $this->minutes;
+        return $this->meeting;
     }
 
     /**
@@ -152,7 +136,7 @@ class Meeting
      *
      * @param string $name
      *
-     * @return Meeting
+     * @return MeetingMinutes
      */
     public function setName($name)
     {
@@ -176,7 +160,7 @@ class Meeting
      *
      * @param string $description
      *
-     * @return Meeting
+     * @return MeetingMinutes
      */
     public function setDescription($description)
     {
