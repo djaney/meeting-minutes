@@ -8,23 +8,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
- * @Route("/meeting")
+ * @Route("/m")
  * @Template()
  */
 class MeetingController extends Controller
 {
     /**
-     * @Route("/create")
-     * @Method("GET")
+     * @Route("")
+     * @Method("POST")
      */
-    public function createAction()
+    public function postAction()
     {
         $meeting = $this->get('app.meeting')->create();
         return $this->redirectToRoute('app_meeting_get',['id'=>$meeting->getId()]);
     }
 
     /**
-     * @Route("/get/{id}")
+     * @Route("/{id}")
      * @Method("GET")
      */
     public function getAction($id)

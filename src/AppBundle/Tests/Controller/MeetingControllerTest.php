@@ -10,19 +10,19 @@ class MeetingControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/meeting/create');
+        $client->request('POST', '/m');
 
         $this->assertTrue(
-            $client->getResponse()->isRedirect('/meeting/get/1')
+            $client->getResponse()->isRedirect('/m/1')
         );
 
-        $client->request('POST', '/meeting/create');
+        $client->request('GET', '/m');
         $this->assertFalse($client->getResponse()->isSuccessful());
 
-        $client->request('PUT', '/meeting/create');
+        $client->request('PUT', '/m');
         $this->assertFalse($client->getResponse()->isSuccessful());
 
-        $client->request('PATCH', '/meeting/create');
+        $client->request('PATCH', '/m');
         $this->assertFalse($client->getResponse()->isSuccessful());
     }
     /**
@@ -32,17 +32,29 @@ class MeetingControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/meeting/get/1 ');
+        $client->request('GET', '/m/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $client->request('GET', '/meeting/get/2 ');
-        $this->assertFalse($client->getResponse()->isSuccessful());
-        
-        $client->request('GET', '/meeting/get/3 ');
+        $client->request('GET', '/m/2');
         $this->assertFalse($client->getResponse()->isSuccessful());
 
-        $client->request('GET', '/meeting/get/4 ');
+        $client->request('GET', '/m/3');
         $this->assertFalse($client->getResponse()->isSuccessful());
+
+        $client->request('GET', '/m/4');
+        $this->assertFalse($client->getResponse()->isSuccessful());
+    }
+
+
+    /**
+     * @depends testCreate
+     */
+    public function testChangeName()
+    {
+        $client = static::createClient();
+
+        //$client->request('GET', '/api/meeting/get/1');
+
     }
 
 }
