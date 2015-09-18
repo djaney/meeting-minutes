@@ -10,7 +10,7 @@ class MeetingService {
 
     public function create($title = ''){
         $meeting = new Meeting();
-        $meeting->setTitle($title);
+        $meeting->setName($title);
         $this->doctrine->getManager()->persist($meeting);
         $this->doctrine->getManager()->flush();
         return $meeting;
