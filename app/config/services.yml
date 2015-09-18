@@ -7,6 +7,6 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
-   factory.meeting:
-       class: AppBundle\Factories\MeetingFactory
+   app.meeting:
+       class: AppBundle\Service\MeetingService
        arguments: ["@doctrine"]

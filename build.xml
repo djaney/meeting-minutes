@@ -37,7 +37,7 @@
 
         <!-- run tests -->
         <exec executable="phpunit${cmd}" failonerror="true">
-            <arg line="-c ${basedir}/app"/>
+            <arg line=" -v -c ${basedir}/app"/>
         </exec>
 
         <exec executable="php" failonerror="true">
