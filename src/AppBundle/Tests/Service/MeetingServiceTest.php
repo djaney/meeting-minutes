@@ -12,7 +12,13 @@ class MeetingServiceTest extends WebTestCase
         $svc = $client->getContainer()->get('app.meeting');
 
         $m = $svc->create();
-        $this->assertNotNull($m);
+        $this->assertNotNull($svc->getById($m->getId()));
+
+        $m = $svc->create('');
+        $this->assertNotNull($svc->getById($m->getId()));
+        $crazyString = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+        $m = $svc->create($crazyString);
+        $this->assertEquals($crazyString,$svc->getById($m->getId())->getName());
     }
 
 
