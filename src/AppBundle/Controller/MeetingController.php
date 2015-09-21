@@ -19,7 +19,7 @@ class MeetingController extends Controller
      */
     public function postAction()
     {
-        $meeting = $this->get('app.meeting')->create();
+        $meeting = $this->get('facade.meeting')->create()->getSubject();
         return $this->redirectToRoute('app_meeting_get',['id'=>$meeting->getId()]);
     }
 
@@ -29,7 +29,7 @@ class MeetingController extends Controller
      */
     public function getAction($id)
     {
-        $meeting = $this->get('app.meeting')->getById($id);
+        $meeting = $this->get('facade.meeting')->getById($id);
         if($meeting===null){
             throw $this->createNotFoundException('Meeting does not exist');
         }
