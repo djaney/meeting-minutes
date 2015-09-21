@@ -1,0 +1,10 @@
+meetings:
+    type:     rest
+    resource: AppBundle\ApiController\MeetingController
+    name_prefix: api_
+
+minutes:
+    type:     rest
+    parent:   meetings
+    resource: AppBundle\ApiController\MeetingMinutesController
+    name_prefix: api_
