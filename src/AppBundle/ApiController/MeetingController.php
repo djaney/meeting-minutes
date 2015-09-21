@@ -2,11 +2,12 @@
 
 namespace AppBundle\ApiController;
 
-use FOS\RestBundle\Controller\FOSRestController;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use FOS\RestBundle\Routing\ClassResourceInterface;
+
 use Symfony\Component\HttpFoundation\Request;
-class MeetingController extends FOSRestController implements ClassResourceInterface
+
+class MeetingController extends BaseApiController
 {
     public function getAction($id){
         $meeting = $this->get('facade.meeting')->getById($id);
@@ -14,18 +15,37 @@ class MeetingController extends FOSRestController implements ClassResourceInterf
     }
 
     public function postAction(Request $req){
-        $name = $req->request->get('name','');
-        $description = $req->request->get('description','');
-        $meeting = $this->get('facade.meeting')->create()->getSubject();
-        $meeting->setName($name);
-        $meeting->setDescription($description);
+        $request = $req->request;
+        $meeting = $this->get('facade.meeting')
+            ->create()
+            ->mutate(function($subject) use ($request){
+                $r = new \ReflectionClass($subject);
+                foreach($request->all() as $k=>$v){
+                    if( $k=='id' ) continue;
+                    $method = 'set' . ucfirst($k) ;
+                    if( $r->hasMethod( $method ) ){
+                        $subject->$method($v);
+                    }
+                }
+            })
+            ->getSubject()
+
+        ;
+
+
+        $validator = $this->get('validator');
+        $errors = $validator->validate($meeting);
+        if ($errors->count() > 0) {
+            return $this->createValidationErrorResponse($errors);
+        }
+
         $this->get('facade.meeting')->flush();
         return $meeting;
     }
 
     public function patchAction($id,Request $req){
         $request = $req->request;
-        $ret = $this->get('facade.meeting')
+        $meeting = $this->get('facade.meeting')
             ->setSubjectById($id)
             ->mutate(function($subject) use ($request){
                 $r = new \ReflectionClass($subject);
@@ -37,7 +57,14 @@ class MeetingController extends FOSRestController implements ClassResourceInterf
                     }
                 }
             })->getSubject();
+
+            $validator = $this->get('validator');
+            $errors = $validator->validate($meeting);
+            if ($errors->count() > 0) {
+                return $this->createValidationErrorResponse($errors);
+            }
+
             $this->get('facade.meeting')->flush();
-            return $ret;
+            return $meeting;
     }
 }

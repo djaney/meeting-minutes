@@ -21,8 +21,7 @@ abstract class BaseFacade {
         return $this;
     }
     public function setSubjectById($id){
-        $this->subject = $this->getById($id);
-        return $this;
+        return $this->setSubject($this->getById($id));
     }
     public function getSubject(){
         return $this->subject;

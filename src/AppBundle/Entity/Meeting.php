@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo; // gedmo annotations
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Meeting
  *
@@ -40,6 +41,7 @@ class Meeting
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
+     * @Assert\NotBlank
      */
     private $name = '';
 
