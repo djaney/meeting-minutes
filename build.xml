@@ -15,7 +15,7 @@
         </exec>
     </target>
 
-    <target name="test">
+    <target name="test" depends="install">
 
         <exec executable="php" failonerror="true">
             <arg line="app/console cache:clear --env=test"/>

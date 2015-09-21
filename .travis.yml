@@ -1,2 +1,2 @@
 language: php
-script: ant install test
+script: ant test
