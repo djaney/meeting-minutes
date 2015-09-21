@@ -36,6 +36,6 @@ class MeetingController extends Controller
         return array(
                 // ...
             );
-        }
+    }
 
 }

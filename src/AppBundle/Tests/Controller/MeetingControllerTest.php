@@ -57,4 +57,21 @@ class MeetingControllerTest extends WebTestCase
 
     }
 
+
+    /**
+     * @depends testCreate
+     */
+    public function testApi()
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/api/v1/meetings/1');
+
+        $this->assertTrue(
+            $client->getResponse()->isSuccessful()
+        );
+
+
+    }
+
 }
