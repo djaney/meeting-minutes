@@ -80,4 +80,33 @@ class MeetingControllerTest extends WebTestCase
 
     }
 
+    /**
+     * @depends testPostApi
+     */
+    public function testPatchApi()
+    {
+        $client = static::createClient();
+
+        $client->request('POST', '/api/v1/meetings',[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ],
+            '{"name":"Fabien","description":"This is a meeting"}'
+        );
+        $res = json_decode($client->getResponse()->getContent());
+        $id = $res->id;
+
+        $client->request('PATCH', '/api/v1/meetings/'.$id,[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ],
+            '{"name":"Patched","description":"Shinku Hadokkenn!!!"}'
+        );
+        $res = json_decode($client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('id',$res);
+        $this->assertObjectHasAttribute('name',$res);
+        $this->assertObjectHasAttribute('description',$res);
+        $this->assertEquals('Patched',$res->name);
+        $this->assertEquals('Shinku Hadokkenn!!!',$res->description);
+
+    }
+
 }

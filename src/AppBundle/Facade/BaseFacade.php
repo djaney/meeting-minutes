@@ -46,4 +46,9 @@ abstract class BaseFacade {
         return $this;
     }
 
+    public function mutate(\Closure $callback){
+        $callback($this->subject);
+        return $this;
+    }
+
 }

@@ -22,4 +22,22 @@ class MeetingController extends FOSRestController implements ClassResourceInterf
         $this->get('facade.meeting')->flush();
         return $meeting;
     }
+
+    public function patchAction($id,Request $req){
+        $request = $req->request;
+        $ret = $this->get('facade.meeting')
+            ->setSubjectById($id)
+            ->mutate(function($subject) use ($request){
+                $r = new \ReflectionClass($subject);
+                foreach($request->all() as $k=>$v){
+                    if( $k=='id' ) continue;
+                    $method = 'set' . ucfirst($k) ;
+                    if( $r->hasMethod( $method ) ){
+                        $subject->$method($v);
+                    }
+                }
+            })->getSubject();
+            $this->get('facade.meeting')->flush();
+            return $ret;
+    }
 }
