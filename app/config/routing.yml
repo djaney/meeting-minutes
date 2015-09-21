@@ -5,4 +5,4 @@ app:
 api:
     type: rest
     resource: api_routing.yml
-    prefix:  api
+    prefix:  api/v1
