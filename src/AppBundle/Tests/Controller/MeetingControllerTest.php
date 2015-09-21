@@ -58,20 +58,99 @@ class MeetingControllerTest extends WebTestCase
     }
 
 
-    /**
-     * @depends testCreate
-     */
-    public function testApi()
+
+    public function testPostApi()
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/v1/meetings/1');
+        $client->request('POST', '/api/v1/meetings',[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ],
+            '{"name":"Fabien","description":"This is a meeting"}'
+        );
+
+        $res = json_decode($client->getResponse()->getContent());
+        $this->assertTrue(
+            $client->getResponse()->isSuccessful()
+        );
+        $this->assertObjectHasAttribute('id',$res);
+        $this->assertObjectHasAttribute('name',$res);
+        $this->assertEquals('Fabien',$res->name);
+        $this->assertEquals('This is a meeting',$res->description);
+
+
+        $client->request('POST', '/api/v1/meetings',[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ]
+        );
+
+        $this->assertFalse(
+            $client->getResponse()->isSuccessful()
+        );
+        $res = json_decode($client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('errors',$res);
+        $this->assertObjectHasAttribute('field',$res->errors[0]);
+        $this->assertObjectHasAttribute('message',$res->errors[0]);
+        $this->assertEquals('name',$res->errors[0]->field);
+        $this->assertEquals('This value should not be blank.',$res->errors[0]->message);
+    }
+
+    /**
+     * @depends testPostApi
+     */
+    public function testPatchApi()
+    {
+        $client = static::createClient();
+        // test post
+        $client->request('POST', '/api/v1/meetings',[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ],
+            '{"name":"Fabien","description":"This is a meeting"}'
+        );
+        $res = json_decode($client->getResponse()->getContent());
+        $id = $res->id;
+        // patch after post
+        $client->request('PATCH', '/api/v1/meetings/'.$id,[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ],
+            '{"name":"Patched","description":"Shinku Hadokkenn!!!"}'
+        );
+        $res = json_decode($client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('id',$res);
+        $this->assertObjectHasAttribute('name',$res);
+        $this->assertObjectHasAttribute('description',$res);
+        $this->assertEquals('Patched',$res->name);
+        $this->assertEquals('Shinku Hadokkenn!!!',$res->description);
+
+        // patch with validation error
+        $client->request('PATCH', '/api/v1/meetings/'.$id,[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ],
+            '{"name":"","description":""}'
+        );
+
+        $this->assertFalse(
+            $client->getResponse()->isSuccessful()
+        );
+        $res = json_decode($client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('errors',$res);
+        $this->assertObjectHasAttribute('field',$res->errors[0]);
+        $this->assertObjectHasAttribute('message',$res->errors[0]);
+        $this->assertEquals('name',$res->errors[0]->field);
+        $this->assertEquals('This value should not be blank.',$res->errors[0]->message);
+
+        // check if value is commited even with error
+        $client->request('GET', '/api/v1/meetings/'.$id);
 
         $this->assertTrue(
             $client->getResponse()->isSuccessful()
         );
-
-
+        $res = json_decode($client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('id',$res);
+        $this->assertObjectHasAttribute('name',$res);
+        $this->assertObjectHasAttribute('description',$res);
+        $this->assertEquals('Patched',$res->name);
+        $this->assertEquals('Shinku Hadokkenn!!!',$res->description);
     }
 
 }
