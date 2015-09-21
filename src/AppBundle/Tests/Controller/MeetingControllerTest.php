@@ -58,19 +58,25 @@ class MeetingControllerTest extends WebTestCase
     }
 
 
-    /**
-     * @depends testCreate
-     */
-    public function testApi()
+
+    public function testPostApi()
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/v1/meetings/1');
+        $client->request('POST', '/api/v1/meetings',[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ],
+            '{"name":"Fabien","description":"This is a meeting"}'
+        );
 
+        $res = json_decode($client->getResponse()->getContent());
         $this->assertTrue(
             $client->getResponse()->isSuccessful()
         );
-
+        $this->assertObjectHasAttribute('id',$res);
+        $this->assertObjectHasAttribute('name',$res);
+        $this->assertEquals('Fabien',$res->name);
+        $this->assertEquals('This is a meeting',$res->description);
 
     }
 

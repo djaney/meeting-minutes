@@ -34,7 +34,7 @@ class Meeting
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="MeetingMinutes", mappedBy="meeting")
+     * @ORM\OneToMany(targetEntity="MeetingMinutes", mappedBy="meeting", cascade={"all"})
      **/
     private $minutes;
 
