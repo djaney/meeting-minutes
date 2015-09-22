@@ -10,7 +10,7 @@ class MeetingControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('POST', '/m');
+        $client->request('GET', '/m/new');
 
         $this->assertTrue(
             $client->getResponse()->isRedirect('/m/1')
