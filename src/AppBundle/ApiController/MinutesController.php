@@ -11,6 +11,11 @@ class MinutesController extends BaseApiController
     }
 
     public function getAction($meetingId,$id,Request $req){
+        $minute = $this->get('facade.minutes')->getById($id);
+        if(!$minute){
+            throw $this->createNotFoundException('Minute does not exist');
+        }
+        return $minute;
     }
 
     public function postAction($meetingId,Request $req){
@@ -42,5 +47,13 @@ class MinutesController extends BaseApiController
         $this->get('facade.minutes')->flush();
 
         return $minute;
+    }
+
+    public function deleteAction($meetingId,$id,Request $req){
+        $minute = $this->get('facade.minutes')
+            ->setSubjectById($id)
+            ->delete()
+            ->flush();
+        return null;
     }
 }

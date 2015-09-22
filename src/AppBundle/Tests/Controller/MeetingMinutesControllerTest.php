@@ -66,5 +66,34 @@ class MeetingMinutesControllerTest extends WebTestCase
         $this->assertEquals('Second',$res->name);
         $this->assertEquals('Second',$res->description);
     }
+    /**
+     * @depends testCreateMeeting
+     */
+    public function testDeleteMinute($id){
+        $this->client->request('POST', '/api/v1/meetings/'.$id.'/minutes',[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ],
+            '{"name":"This is to be deleted"}'
+        );
+        $res = json_decode($this->client->getResponse()->getContent());
+        $this->assertTrue(
+            $this->client->getResponse()->isSuccessful()
+        );
+
+        $this->client->request('GET', '/api/v1/meetings/'.$id.'/minutes/'.$res->id);
+        $this->assertTrue(
+            $this->client->getResponse()->isSuccessful()
+        );
+
+        $this->client->request('DELETE', '/api/v1/meetings/'.$id.'/minutes/'.$res->id);
+        $this->assertTrue(
+            $this->client->getResponse()->isSuccessful()
+        );
+
+        $this->client->request('GET', '/api/v1/meetings/'.$id.'/minutes/'.$res->id);
+        $this->assertFalse(
+            $this->client->getResponse()->isSuccessful()
+        );
+    }
 
 }
