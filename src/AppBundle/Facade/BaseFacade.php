@@ -12,6 +12,10 @@ abstract class BaseFacade {
         $this->em = $this->doctrine->getManager();
     }
 
+    public function getCollection($limit = 10, $orderBy = null, $direction = 'ASC'){
+        // TODO
+    }
+
     public function getById($id){
         return $this->doctrine->getRepository($this->className)
         ->find($id);
@@ -38,15 +42,34 @@ abstract class BaseFacade {
     public function create(){
 
         $r = new \ReflectionClass($this->className);
-        $meeting = $r->newInstanceArgs();
-        $this->em->persist($meeting);
+        $subject = $r->newInstanceArgs();
+        $this->em->persist($subject);
         $this->em->flush();
-        $this->setSubject($meeting);
+        $this->setSubject($subject);
         return $this;
     }
 
     public function mutate(\Closure $callback){
+        if($this->subject===null) throw new InvalidFacadeSubjectException();
         $callback($this->subject);
+        return $this;
+    }
+    public function patch($array){
+        if($this->subject===null) throw new InvalidFacadeSubjectException();
+        $r = new \ReflectionClass($this->subject);
+        foreach($array as $k=>$v){
+            if( $k=='id' ) continue;
+            $method = 'set' . ucfirst($k) ;
+            if( $r->hasMethod( $method ) ){
+                $this->subject->$method($v);
+            }
+        }
+        return $this;
+    }
+
+    public function delete(){
+        if($this->subject===null) throw new InvalidFacadeSubjectException();
+        $this->em->remove($this->subject);
         return $this;
     }
 

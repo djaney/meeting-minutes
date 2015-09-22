@@ -4,30 +4,21 @@ namespace AppBundle\ApiController;
 
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-
 use Symfony\Component\HttpFoundation\Request;
-
 class MeetingController extends BaseApiController
 {
     public function getAction($id){
         $meeting = $this->get('facade.meeting')->getById($id);
+        if(!$meeting){
+            throw $this->createNotFoundException('Meeting does not exist');
+        }
         return $meeting;
     }
 
     public function postAction(Request $req){
-        $request = $req->request;
         $meeting = $this->get('facade.meeting')
             ->create()
-            ->mutate(function($subject) use ($request){
-                $r = new \ReflectionClass($subject);
-                foreach($request->all() as $k=>$v){
-                    if( $k=='id' ) continue;
-                    $method = 'set' . ucfirst($k) ;
-                    if( $r->hasMethod( $method ) ){
-                        $subject->$method($v);
-                    }
-                }
-            })
+            ->patch($req->request->all())
             ->getSubject()
 
         ;
@@ -47,16 +38,8 @@ class MeetingController extends BaseApiController
         $request = $req->request;
         $meeting = $this->get('facade.meeting')
             ->setSubjectById($id)
-            ->mutate(function($subject) use ($request){
-                $r = new \ReflectionClass($subject);
-                foreach($request->all() as $k=>$v){
-                    if( $k=='id' ) continue;
-                    $method = 'set' . ucfirst($k) ;
-                    if( $r->hasMethod( $method ) ){
-                        $subject->$method($v);
-                    }
-                }
-            })->getSubject();
+            ->patch($req->request->all())
+            ->getSubject();
 
             $validator = $this->get('validator');
             $errors = $validator->validate($meeting);
@@ -66,5 +49,13 @@ class MeetingController extends BaseApiController
 
             $this->get('facade.meeting')->flush();
             return $meeting;
+    }
+
+    public function deleteAction($id,Request $req){
+        $meeting = $this->get('facade.meeting')
+            ->setSubjectById($id)
+            ->delete()
+            ->flush();
+        return null;
     }
 }
