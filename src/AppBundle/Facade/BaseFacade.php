@@ -46,7 +46,20 @@ abstract class BaseFacade {
     }
 
     public function mutate(\Closure $callback){
+        if($this->subject===null) throw new InvalidFacadeSubjectException();
         $callback($this->subject);
+        return $this;
+    }
+    public function patch($array){
+        if($this->subject===null) throw new InvalidFacadeSubjectException();
+        $r = new \ReflectionClass($this->subject);
+        foreach($array as $k=>$v){
+            if( $k=='id' ) continue;
+            $method = 'set' . ucfirst($k) ;
+            if( $r->hasMethod( $method ) ){
+                $this->subject->$method($v);
+            }
+        }
         return $this;
     }
 
