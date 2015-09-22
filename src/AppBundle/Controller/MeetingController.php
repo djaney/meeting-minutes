@@ -14,10 +14,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class MeetingController extends Controller
 {
     /**
-     * @Route("")
-     * @Method("POST")
+     * @Route("/new")
+     * @Method("GET")
      */
-    public function postAction()
+    public function newAction()
     {
         $meeting = $this->get('facade.meeting')->create()->getSubject();
         return $this->redirectToRoute('app_meeting_get',['id'=>$meeting->getId()]);
