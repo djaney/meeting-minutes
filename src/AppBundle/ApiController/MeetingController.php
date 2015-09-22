@@ -9,6 +9,9 @@ class MeetingController extends BaseApiController
 {
     public function getAction($id){
         $meeting = $this->get('facade.meeting')->getById($id);
+        if(!$meeting){
+            throw $this->createNotFoundException('Meeting does not exist');
+        }
         return $meeting;
     }
 
@@ -46,5 +49,13 @@ class MeetingController extends BaseApiController
 
             $this->get('facade.meeting')->flush();
             return $meeting;
+    }
+
+    public function deleteAction($id,Request $req){
+        $meeting = $this->get('facade.meeting')
+            ->setSubjectById($id)
+            ->delete()
+            ->flush();
+        return null;
     }
 }

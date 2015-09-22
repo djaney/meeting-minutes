@@ -46,19 +46,6 @@ class MeetingControllerTest extends WebTestCase
     }
 
 
-    /**
-     * @depends testCreate
-     */
-    public function testChangeName()
-    {
-        $client = static::createClient();
-
-        //$client->request('GET', '/api/meeting/get/1');
-
-    }
-
-
-
     public function testPostApi()
     {
         $client = static::createClient();
@@ -150,6 +137,40 @@ class MeetingControllerTest extends WebTestCase
         $this->assertEquals('Patched',$res->name);
         $this->assertEquals('Shinku Hadokkenn!!!',$res->description);
     }
+
+    public function testDelete(){
+        $client = static::createClient();
+        // test post
+        $client->request('POST', '/api/v1/meetings',[],[],[
+                'CONTENT_TYPE'=>'application/json',
+            ],
+            '{"name":"This is to be deleted","description":"sad news"}'
+        );
+
+        $res = json_decode($client->getResponse()->getContent());
+        $id = $res->id;
+
+
+        $client->request('GET', '/api/v1/meetings/'.$id);
+        $this->assertTrue(
+            $client->getResponse()->isSuccessful()
+        );
+
+        $client->request('DELETE', '/api/v1/meetings/'.$id);
+        $this->assertTrue(
+            $client->getResponse()->isSuccessful()
+        );
+
+        $client->request('GET', '/api/v1/meetings/'.$id);
+        $this->assertFalse(
+            $client->getResponse()->isSuccessful()
+        );
+
+
+    }
+
+
+
 
 
 }

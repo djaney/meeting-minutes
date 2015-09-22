@@ -42,10 +42,10 @@ abstract class BaseFacade {
     public function create(){
 
         $r = new \ReflectionClass($this->className);
-        $meeting = $r->newInstanceArgs();
-        $this->em->persist($meeting);
+        $subject = $r->newInstanceArgs();
+        $this->em->persist($subject);
         $this->em->flush();
-        $this->setSubject($meeting);
+        $this->setSubject($subject);
         return $this;
     }
 
@@ -64,6 +64,12 @@ abstract class BaseFacade {
                 $this->subject->$method($v);
             }
         }
+        return $this;
+    }
+
+    public function delete(){
+        if($this->subject===null) throw new InvalidFacadeSubjectException();
+        $this->em->remove($this->subject);
         return $this;
     }
 

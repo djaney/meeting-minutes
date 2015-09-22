@@ -7,10 +7,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 class MinutesController extends BaseApiController
 {
-    public function getAction($meetingId,Request $req){
+    public function cgetAction($meetingId,Request $req){
     }
 
-    public function cgetAction($meetingId,$id,Request $req){
+    public function getAction($meetingId,$id,Request $req){
     }
 
     public function postAction($meetingId,Request $req){
