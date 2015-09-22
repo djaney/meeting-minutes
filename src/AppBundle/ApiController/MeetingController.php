@@ -4,9 +4,7 @@ namespace AppBundle\ApiController;
 
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-
 use Symfony\Component\HttpFoundation\Request;
-
 class MeetingController extends BaseApiController
 {
     public function getAction($id){

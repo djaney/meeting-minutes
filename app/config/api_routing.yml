@@ -6,5 +6,5 @@ meetings:
 minutes:
     type:     rest
     parent:   meetings
-    resource: AppBundle\ApiController\MeetingMinutesController
+    resource: AppBundle\ApiController\MinutesController
     name_prefix: api_

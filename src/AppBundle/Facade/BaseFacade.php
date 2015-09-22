@@ -12,6 +12,10 @@ abstract class BaseFacade {
         $this->em = $this->doctrine->getManager();
     }
 
+    public function getCollection($limit = 10, $orderBy = null, $direction = 'ASC'){
+        // TODO
+    }
+
     public function getById($id){
         return $this->doctrine->getRepository($this->className)
         ->find($id);

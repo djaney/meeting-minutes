@@ -10,3 +10,6 @@ services:
    facade.meeting:
        class: AppBundle\Facade\MeetingFacade
        arguments: ["@doctrine"]
+   facade.minutes:
+       class: AppBundle\Facade\MeetingMinutesFacade
+       arguments: ["@doctrine"]
